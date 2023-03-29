@@ -1,13 +1,22 @@
 import React, { Component } from 'react'
 
 export class Newsitem extends Component {
-  render() {
-    return (
-      <div>
-        <h3>this is news item</h3>
-      </div>
-    )
-  }
+    render() {
+        let {title, description, imageUrl, newsUrl} = this.props
+        return (
+            <div>
+                <div className="card" style={{width: "18rem"}}>
+                    <img src={!imageUrl ? "https://www.hindustantimes.com/ht-img/img/2023/03/28/1600x900/Atiq_Ahmad_1679987249237_1679987249584_1679987249584.jpg"
+                     : imageUrl} className="card-img-top" alt="..."/>
+                        <div className="card-body">
+                            <h5 className="card-title">{title}...</h5>
+                            <p className="card-text">{description}...</p>
+                            <a href={newsUrl} target="_blank" className="btn btn-sm btn-dark">Go somewhere</a>
+                        </div>
+                </div>
+            </div>
+        )
+    }
 }
 
 export default Newsitem
