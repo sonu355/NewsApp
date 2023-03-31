@@ -32,7 +32,8 @@ export class News extends Component {
     }
 
     async updateNews() {
-        let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=8e0781f04ab746eb9560fbc5a2169871&pageSize=${this.props.pageSize}`
+        let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}
+        &category=${this.props.category}&apiKey=5a97b8db86ee4caf980aa6f70337dcda&pageSize=${this.props.pageSize}`
         this.setState({ loading: true })
         let data = await fetch(url)
         let parsedData = await data.json()
@@ -61,7 +62,8 @@ export class News extends Component {
     }
     fetchMoreData = async () => {
         this.setState({ page: this.state.page + 1 })
-        const url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=8e0781f04ab746eb9560fbc5a2169871&pageSize=${this.props.pageSize}&page=${this.state.page + 1}`
+        const url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}
+        &apiKey=5a97b8db86ee4caf980aa6f70337dcda&pageSize=${this.props.pageSize}&page=${this.state.page + 1}`
         this.setState({ loading: true })
         let data = await fetch(url)
         let parsedData = await data.json()
@@ -72,7 +74,6 @@ export class News extends Component {
             loading: false
         })
     }
-
     render() {
         return (
             <>
@@ -92,6 +93,7 @@ export class News extends Component {
                                             description={element.description ? element.description.slice(0, 87) : ""}
                                             imageUrl={element.urlToImage} newsUrl={element.url} author={element.author} date={element.publishedAt} source={element.source.name} 
                                         />
+                                        console.log(element.url);
                                     </div>
                         })}
                     </div>
