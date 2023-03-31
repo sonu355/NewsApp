@@ -1,61 +1,72 @@
 import React, { Component } from 'react'
 import Newsitem from './Newsitem'
+import Spinner from './Spinner'
+import propTypes from 'prop-types'
+
 
 export class News extends Component {
+    static defaultProps = {
+        country: 'in',
+        pageSize: 6,
+        category: 'science'
+    }
+    static propTypes = {
+        country: propTypes.string,
+        pageSize: propTypes.number,
+        category: propTypes.string
+    }
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         console.log("Hello");
         this.state = {
             articles: [],
             loading: false,
-            page: 1
+            page: 1,
         }
+        document.title = `${this.props.category} - NewsMonkey`
     }
 
-    async componentDidMount() {
-        let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=ab3227adbfe54ad699ce3c3224589dc6&page=1&pageSize=${this.props.pageSize}`
+    async updateNews(){
+        let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=8e0781f04ab746eb9560fbc5a2169871&pageSize=${this.props.pageSize}`
+        this.setState({loading: true})
         let data = await fetch(url)
         let parsedData = await data.json()
         console.log(parsedData);
-        this.setState({ articles: parsedData.articles, totalResults: parsedData.totalResults })
-    }
-
-    handlePrevClick = async () => {
-        let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=ab3227adbfe54ad699ce3c3224589dc6&page=${this.state.page - 1}&pageSize=${this.props.pageSize}`
-        let data = await fetch(url)
-        let parsedData = await data.json()
-        console.log(parsedData);
-        this.setState({ articles: parsedData.articles ,
-        page: this.state.page - 1
+        this.setState({ 
+            articles: parsedData.articles, 
+            totalResults: parsedData.totalResults,
+            loading: false
         })
     }
 
-    handleNextClick = async () => {
-        if(this.state.page + 1 > Math.ceil(this.state.totalResults/this.props.pageSize) ){
+    async componentDidMount() {
+        this.updateNews()
+    }
 
-        }
-        else {
-            let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=ab3227adbfe54ad699ce3c3224589dc6&page=${this.state.page + 1}&pageSize=${this.props.pageSize}`
-            let data = await fetch(url)
-            let parsedData = await data.json()
-            console.log(parsedData);
-            this.setState({ articles: parsedData.articles ,
-            page: this.state.page + 1
-            })
-        }
+    handlePrevClick = async () => {
+        console.log("previous");
+            this.setState({page: this.state.page - 1})
+            this.updateNews()
+    }
+
+    handleNextClick = async () => {
+        console.log("Next");
+        this.setState({page: this.state.page + 1})
+        this.updateNews()
     }
 
     render() {
         return (
             <div className='container'>
-                <h1 className="text-center mb-3">***NewsMonkey - Top headlines***</h1>
+                <h1 className="text-center m-3">***NewsMonkey - Top headlines***</h1>
+                {this.state.loading && <Spinner />}
                 <div className="row">
-                    {this.state.articles.map((element) => {
+                    {!this.state.loading && this.state.articles.map((element) => {
                         return <div className="col-md-4" key={element.url}>
                             <Newsitem title={element.title ? element.title.slice(0, 45) : ""}
                                 description={element.description ? element.description.slice(0, 87) : ""}
-                                imageUrl={element.urlToImage} newsUrl={element.url} />
+                                imageUrl={element.urlToImage} newsUrl={element.url} author={element.author} date={element.publishedAt} source={element.source.name}/>
                         </div>
                     })}
                 </div>
