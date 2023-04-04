@@ -32,10 +32,11 @@ export class News extends Component {
     }
 
     async updateNews() {
-        let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}
-        &category=${this.props.category}&apiKey=5a97b8db86ee4caf980aa6f70337dcda&pageSize=${this.props.pageSize}`
+        console.log(this.props.apiKey);
+        let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${this.props.apiKey}&pageSize=${this.props.pageSize}`;
         this.setState({ loading: true })
         let data = await fetch(url)
+        console.log(data);
         let parsedData = await data.json()
         console.log(parsedData);
         this.setState({
@@ -62,8 +63,7 @@ export class News extends Component {
     }
     fetchMoreData = async () => {
         this.setState({ page: this.state.page + 1 })
-        const url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}
-        &apiKey=5a97b8db86ee4caf980aa6f70337dcda&pageSize=${this.props.pageSize}&page=${this.state.page + 1}`
+        const url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${this.props.apiKey}&pageSize=${this.props.pageSize}&page=${this.state.page + 1}`
         this.setState({ loading: true })
         let data = await fetch(url)
         let parsedData = await data.json()
@@ -85,19 +85,18 @@ export class News extends Component {
                     hasMore={this.state.articles.length !== this.state.totalResults}
                     loader={<Spinner />}
                 >
-                <div className="container">    
-                    <div className="row">
-                        {this.state.articles.map((element) => {
-                            return <div className="col-md-4" key={element.url}>
-                                        <Newsitem title={element.title ? element.title.slice(0, 45) : ""}
-                                            description={element.description ? element.description.slice(0, 87) : ""}
-                                            imageUrl={element.urlToImage} newsUrl={element.url} author={element.author} date={element.publishedAt} source={element.source.name} 
-                                        />
-                                        console.log(element.url);
-                                    </div>
-                        })}
+                    <div className="container">
+                        <div className="row">
+                            {this.state.articles.map((element) => {
+                                return <div className="col-md-4" key={element.url}>
+                                    <Newsitem title={element.title ? element.title.slice(0, 45) : ""}
+                                        description={element.description ? element.description.slice(0, 87) : ""}
+                                        imageUrl={element.urlToImage} newsUrl={element.url} author={element.author} date={element.publishedAt} source={element.source.name}
+                                    />
+                                </div>
+                            })}
+                        </div>
                     </div>
-                </div>
                 </InfiniteScroll>
                 {/* <div className="container d-flex justify-content-between">
                     <button disabled={this.state.page <= 1} type="button" class="btn btn-dark" onClick={this.handlePrevClick} >&larr; Previous</button>
